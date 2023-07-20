@@ -12,6 +12,7 @@ namespace eWallet.Data.Models
         public DateTime DateAdded { get; set; } = DateTime.UtcNow;
         public bool IsDeleted { get; set; } = false;
         public bool IsIdentified { get; set; } = false;
+        public required string UserName { get; set; }
         public required string FullName { get; set; }
         public required string PasswordHash { get; set; }
     }

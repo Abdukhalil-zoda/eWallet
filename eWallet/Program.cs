@@ -1,4 +1,6 @@
 using eWallet;
+using eWallet.Data.Models;
+using eWallet.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -54,6 +56,10 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "Bearer"
     });
 });
+
+builder.Services.AddScoped<IBaseRepository<User>, UserRepository>();
+builder.Services.AddScoped<IBaseRepository<Wallet>, WalletRepository>();
+builder.Services.AddScoped<IBaseRepository<Transaction>, TransactionRepository>();
 
 var app = builder.Build();
 
