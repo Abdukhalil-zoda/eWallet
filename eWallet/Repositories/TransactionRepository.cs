@@ -21,13 +21,14 @@ namespace eWallet.Repositories
         public IEnumerable<Transaction> GetAll() =>
             Data.Transactions;
 
-        public Transaction GetById(Guid id) =>
-            Data.Transactions.First(x => x.Id == id);
+        public Transaction? GetById(Guid id) =>
+            Data.Transactions.FirstOrDefault(x => x.Id == id);
 
-        public async Task Insert(Transaction entity)
+        public async Task<Guid> Insert(Transaction entity)
         {
-            Data.Transactions.Add(entity);
+            var id = Data.Transactions.Add(entity).Entity.Id;
             await Data.SaveChangesAsync();
+            return id;
         }
 
         public async Task Update(Transaction entity)

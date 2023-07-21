@@ -1,8 +1,11 @@
+using AutoMapper;
 using eWallet;
 using eWallet.Data.Models;
 using eWallet.Repositories;
+using eWallet.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -40,28 +43,27 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "eWallet", Version = "v1" });
-    c.AddSecurityDefinition("CustomScheme", new OpenApiSecurityScheme
-    {
-        Description = "Enter UserId",
-        Name = "X-UserId",
-        In = ParameterLocation.Header,
-        Scheme = "CustomScheme"
-    });
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Description = "Enter like that => Bearer {your token}",
-        Name = "X-Digest",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
-    });
+    c.OperationFilter<SwaggerOperationFilters>();
 });
 
 builder.Services.AddScoped<IBaseRepository<User>, UserRepository>();
 builder.Services.AddScoped<IBaseRepository<Wallet>, WalletRepository>();
 builder.Services.AddScoped<IBaseRepository<Transaction>, TransactionRepository>();
 
+builder.Services.AddTransient<IAuthService, AuthService>();
+builder.Services.AddTransient<IWalletService, WalletService>();
+builder.Services.AddTransient<ITransactionService, TransactionService>();
+
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new MapperProfile());
+});
+
+builder.Services.AddSingleton(mapperConfig.CreateMapper());
+
+
 var app = builder.Build();
+
 
 
 

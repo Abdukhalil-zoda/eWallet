@@ -20,13 +20,14 @@ namespace eWallet.Repositories
         public IEnumerable<Wallet> GetAll() =>
             Data.Wallets;
 
-        public Wallet GetById(Guid id) =>
-            Data.Wallets.First(x => x.Id == id);
+        public Wallet? GetById(Guid id) =>
+            Data.Wallets.FirstOrDefault(x => x.Id == id);
 
-        public async Task Insert(Wallet entity)
+        public async Task<Guid> Insert(Wallet entity)
         {
-            Data.Wallets.Add(entity);
+            var id = Data.Wallets.Add(entity).Entity.Id;
             await Data.SaveChangesAsync();
+            return id;
         }
 
         public async Task Update(Wallet entity)
