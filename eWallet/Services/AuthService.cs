@@ -42,7 +42,7 @@ namespace eWallet.Services
             var claims = new List<Claim>();
             foreach (var walet in WalletRepository.Where(p => p.Owner == User.Id))
             {
-                claims.Add(new Claim(walet.Name, walet.Id.ToString()));
+                claims.Add(new Claim(walet.Id.ToString(), JsonConvert.SerializeObject(walet)));
             }
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
